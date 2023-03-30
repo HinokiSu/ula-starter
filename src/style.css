@@ -1,0 +1,66 @@
+:root {
+  font-size: 16px;
+
+  /* Reference to: NextUI */
+  --ula-colors-primary: #0072f5;
+  --ula-colors-text: #11181c;
+  --ula-colors-border: rgb(0,0,0, 0.15);
+  --ula-color-gradient: linear-gradient(112deg, #06b7db -63.59%, #ff4ecd -20.3%, #0072f5 70.46%);
+  --ula-fonts-sans: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+*,
+*::before,
+* :after {
+  box-sizing: border-box;
+  text-rendering: geometricPrecision;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-width: 500px;
+  /* min-height: 100vh; */
+  margin: 0;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+
+/*  */
+
+/* ===== Scrollbar CSS ===== */
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  /* background: #ffffff; */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #918d8d;
+  border-radius: 12px;
+  border: 4px solid #ffffff;
+}
+
+*::-webkit-scrollbar:horizontal {
+  height: 12px;
+}
+
+*::-webkit-scrollbar-thumb:horizontal {
+  border-radius: 12px;
+  border: 4px solid #ffffff;
+  /* background-color: #e5e4e4; */
+}
+
+*::-webkit-scrollbar-thumb:horizontal:hover {
+  background-color: #bfbdbd;
+}
