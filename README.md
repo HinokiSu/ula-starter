@@ -1,7 +1,5 @@
-<div style="text-align:center;">
-    Uipath Log Analyzer Starter
-</div>
 
+ ## Uipath Log Analyzer Starter
 
 ### Usage
 
