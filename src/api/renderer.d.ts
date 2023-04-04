@@ -8,8 +8,12 @@ export interface IElectronAPI {
   // ula run
   startRunUla: () => Promise<IUlaRunResult>
   stopRunUla: () => Promise<boolean>
-  pollingGetUlaLog: (state: boolean) => Promise<any>
+  // polling ula log
+  startPollingGetUlaLog: (state: boolean) => Promise<any>
+  stopPollingUlaLog: (state: boolean) => Promise<void>
+  // get ula log data
   receiveParsedUlaLog: (cb) => Promise<void>
+  openUlaPage: (state: boolean) => Promise<void>
 }
 
 declare global {
