@@ -3,7 +3,7 @@
     <div class="ula-card-container" :style="styles">
       <div class="ula-card-head" v-if="title">
         <div class="ula-card-title">{{ title }}</div>
-        <ula-separator></ula-separator>
+        <!-- <ula-separator></ula-separator> -->
       </div>
       <div :class="['ula-card-content', title === '' ? 'has-title' : '']">
         <slot></slot>
@@ -37,6 +37,14 @@ export default defineComponent({
     },
     hg: {
       type: String
+    },
+    radius: {
+      type: String,
+      default: '14px'
+    },
+    shadow: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {
@@ -46,7 +54,8 @@ export default defineComponent({
       width: propsVal.value.wd,
       'min-width': propsVal.value.minWd,
       'max-width': propsVal.value.maxWd,
-      height: propsVal.value.hg
+      height: propsVal.value.hg,
+      'border-radius': propsVal.value.radius
     })
 
     return { styles }
@@ -55,35 +64,41 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+@--ula-card-transition: transform 0.25s ease 0s, filter 0.25s ease 0s, box-shadow 0.25s ease 0s;
+@--ula-card-text-color: #11181c;
+@--ula-card-drop-shadow: drop-shadow(0 12px 24px rgb(104 112 118 / 0.15))
+  drop-shadow(0 12px 14px rgb(104 112 118 / 0.1));
 .ula-card {
-  --ula-transition-card: transform 0.25s ease 0s, filter 0.25s ease 0s, box-shadow 0.25s ease 0s;
-  --ula-cardTextColor: #11181c;
-
   &-wrapper {
     padding: calc(2 * 0.375rem);
     margin: 0;
   }
 
   &-container {
+    max-width: min-content;
+    height: auto;
+    margin: 0px;
+    padding: 0px;
+
     border-style: solid;
     border-color: var(--ula-colors-border);
     border-width: 1px;
+
     transform: translateZ(0px);
     backface-visibility: hidden;
-    transition: var(--ula-transition-card);
-    margin: 0px;
-    padding: 0px;
-    border-radius: 14px;
+    transition: @--ula-card-transition;
     background: #fff;
-    color: var(--ula-cardTextColor);
+    color: @--ula-card-text-color;
     position: relative;
     display: inline-flex;
     overflow: hidden;
     flex-direction: column;
-    width: 100%;
-    height: auto;
     box-sizing: border-box;
     outline: none;
+    &:hover {
+      filter: @--ula-card-drop-shadow;
+      transform: translateY(-4px);
+    }
   }
 
   &-head {
@@ -99,7 +114,9 @@ export default defineComponent({
     align-items: center;
     overflow: hidden;
     color: inherit;
-    padding: 0.75rem;
+    padding: 0.625rem;
+    border-bottom: 1px solid #eaeaea;
+    cursor: pointer;
   }
 
   &-content {
@@ -118,9 +135,8 @@ export default defineComponent({
     position: relative;
     text-align: left;
     word-break: break-all;
-    color: var(--ula-cardTextColor);
+    color: @--ula-card-text-color;
 
-    
     font-size: 0.875rem;
     font-weight: 500;
 
