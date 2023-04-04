@@ -4,7 +4,7 @@
   /* Reference to: NextUI */
   --ula-colors-primary: #0072f5;
   --ula-colors-text: #11181c;
-  --ula-colors-border: rgb(0,0,0, 0.15);
+  --ula-colors-border: rgb(0, 0, 0, 0.15);
   --ula-color-gradient: linear-gradient(112deg, #06b7db -63.59%, #ff4ecd -20.3%, #0072f5 70.46%);
   --ula-fonts-sans: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -31,7 +31,6 @@ body {
   height: 100%;
 }
 
-
 /*  */
 
 /* ===== Scrollbar CSS ===== */
@@ -39,10 +38,6 @@ body {
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
   width: 12px;
-}
-
-*::-webkit-scrollbar-track {
-  /* background: #ffffff; */
 }
 
 *::-webkit-scrollbar-thumb {
@@ -63,4 +58,9 @@ body {
 
 *::-webkit-scrollbar-thumb:horizontal:hover {
   background-color: #bfbdbd;
+}
+
+/* icon */
+.ula-icon {
+  background: transparent;
 }

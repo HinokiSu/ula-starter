@@ -18,4 +18,8 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.main-content  {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
 </style>

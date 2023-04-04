@@ -4,7 +4,7 @@
       <div class="config-uipath-log">
         <ula-button
           color="primary"
-          :disable="runState"
+          :disabled="runState"
           class="open-dialog-btn"
           @click="OpenSetLogDir"
           title="Open Log Directory"
