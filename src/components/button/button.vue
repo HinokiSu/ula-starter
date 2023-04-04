@@ -1,5 +1,5 @@
 <template>
-  <button class="ula-button" :disabled="disable" @click="clickHandler" :class="classes">
+  <button class="ula-button" :disabled="isDisabled" @click="clickHandler" :class="classes">
     <div class="button-prefix-icon" v-if="hasPreIconSlot">
       <slot name="preIcon"></slot>
     </div>
@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'UlaButton',
@@ -23,7 +23,7 @@ export default defineComponent({
       type: String,
       default: 'default'
     },
-    disable: {
+    disabled: {
       type: Boolean,
       default: false
     },
@@ -39,17 +39,26 @@ export default defineComponent({
     const clickHandler = () => {
       emit('click')
     }
-    const classes = [
-      propsRef.value.disable ? '' : propsRef.value.color,
-      propsRef.value.disable ? 'is-disabled' : '',
-      propsRef.value.active ? 'is-active' : ''
-    ]
+    const isDisabled = computed(() => props.disabled)
+    const classes = computed(() => {
+      const _a = []
+      if (propsRef.value.disabled) {
+        _a.push('is-disabled')
+      } else {
+        _a.push(propsRef.value.color)
+      }
+      if (propsRef.value.active) {
+        _a.push('is-active')
+      }
+      return _a
+    })
 
     const hasPreIconSlot = computed(() => (slots.preIcon ? true : false))
 
     return {
       clickHandler,
       classes,
+      isDisabled,
       hasPreIconSlot
     }
   }
