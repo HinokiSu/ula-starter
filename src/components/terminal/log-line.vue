@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { logObjToHtml, logToHtml } from '../../utils/log-to-html'
+import { logToHtml } from '@utils/log-to-html'
 
 export default defineComponent({
   name: 'UlaLogLine',
@@ -30,9 +30,9 @@ export default defineComponent({
 @--ula-log-silly-color: #9ca5ab;
 
 .ula-log-line {
-    .log-tag {
-        font-size: 0.9rem;
-    }
+  .log-tag {
+    font-size: 0.9rem;
+  }
   .log-wrapper {
     .log-timestamp {
       font-size: 0.835rem;
@@ -47,24 +47,12 @@ export default defineComponent({
       .log-tag {
         color: @--ula-log-error-color;
       }
-
-      .log-timestamp {
-      }
-
-      .log-msg {
-      }
     }
 
     /* warn */
     &.warn {
       .log-tag {
         color: @--ula-log-warn-color;
-      }
-
-      .log-timestamp {
-      }
-
-      .log-msg {
       }
     }
 
@@ -73,24 +61,12 @@ export default defineComponent({
       .log-tag {
         color: @--ula-log-info-color;
       }
-
-      .log-timestamp {
-      }
-
-      .log-msg {
-      }
     }
 
     /* http */
     &.http {
       .log-tag {
         color: @--ula-log-http-color;
-      }
-
-      .log-timestamp {
-      }
-
-      .log-msg {
       }
     }
 
@@ -99,12 +75,6 @@ export default defineComponent({
       .log-tag {
         color: @--ula-log-verbose-color;
       }
-
-      .log-timestamp {
-      }
-
-      .log-msg {
-      }
     }
 
     /* debug */
@@ -112,24 +82,12 @@ export default defineComponent({
       .log-tag {
         color: @--ula-log-debug-color;
       }
-
-      .log-timestamp {
-      }
-
-      .log-msg {
-      }
     }
 
     /* silly */
     &.silly {
       .log-tag {
         color: @--ula-log-silly-color;
-      }
-
-      .log-timestamp {
-      }
-
-      .log-msg {
       }
     }
   }

@@ -8,15 +8,14 @@
       </div>
 
       <div class="terminal-body">
-        <ula-log-line></ula-log-line>
+        <ula-log-line> </ula-log-line>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { useLogStore } from '../../store/log-store'
+import { computed, defineComponent } from 'vue'
 import UlaLogLine from './log-line.vue'
 export default defineComponent({
   name: 'UlaTerminal',
@@ -24,21 +23,20 @@ export default defineComponent({
     UlaLogLine
   },
   setup() {
-    const logStore = useLogStore()
-
     return {}
   }
 })
 </script>
 
 <style lang="less" scoped>
+@--ula-terminal-sans: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+  Bitstream Vera Sans Mono, Courier New, monospace;
+
 .ula-terminal-wrapper {
-  margin-top: 1.5rem;
-  padding-bottom: 8px;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
   height: 300px;
-  min-height: calc(65vh);
+  min-height: calc(67vh);
 }
 .terminal {
   &-container {
@@ -50,8 +48,7 @@ export default defineComponent({
     border: 1px solid #333;
     background: #000;
     color: #fff;
-    font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-      Bitstream Vera Sans Mono, Courier New, monospace;
+    font-family: @--ula-terminal-sans;
     line-height: 1.5;
     font-size: 14px;
     white-space: pre-wrap;
@@ -103,10 +100,6 @@ export default defineComponent({
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
   width: 12px;
-}
-
-*::-webkit-scrollbar-track {
-  // background: #ffffff;
 }
 
 *::-webkit-scrollbar-thumb {
