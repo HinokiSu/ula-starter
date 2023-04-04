@@ -4,11 +4,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'dashboard',
-    component: () => import('../views/dashboard.vue')
+    component: () => import('../views/dashboard/dashboard.vue')
   }
 ]
 
- const router = createRouter({
+const router = createRouter({
   history: createWebHistory('/'),
   routes
 })
