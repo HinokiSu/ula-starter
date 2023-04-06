@@ -13,7 +13,7 @@ type TLogItem = {
 }
 
 type TReply = {
-  /* -1: error, 0: null data, 1: valuable data */
+  /* false: error, true: valuable data */
   flag: boolean
   msg: string
   data: Array<TLogItem> | []
@@ -36,8 +36,9 @@ export const pollingRead = async (cb: any, stop = false) => {
   // check logger file exist
   let isExist = await nodeAPI.fsExistsSync(logPath)
   for (let i = 0; i < 3; i++) {
+    console.log('loop: ', i)
     if (!isExist) {
-      sleep(1000)
+      await sleep(1000)
       // check again
       isExist = await nodeAPI.fsExistsSync(logPath)
     } else {
@@ -50,9 +51,10 @@ export const pollingRead = async (cb: any, stop = false) => {
       flag: false,
       msg: '[ULA Log]: logger file is not found'
     })
+  } else {
+    console.log('[ULA Log]: file has been found')
   }
-  const fileStats = await nodeAPI.fspStat(logPath)
-  let oldModTime = fileStats.mtimeMs
+  let oldModTime = ''
 
   while (true) {
     let _oldLogTimestamp: string = ''

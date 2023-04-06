@@ -11,6 +11,7 @@ process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? join(process.env.DIST_ELECTRON, '../public')
   : process.env.DIST
 
+const isDevEnv = process.env.NODE_ENV === 'development'
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 
@@ -55,7 +56,7 @@ async function createWindow() {
   console.log(process.env.VITE_DEV_SERVER_URL)
 
   // Dev Env
-  if (process.env.NODE_ENV === 'development') {
+  if (isDevEnv) {
     // electron-vite-vue#298
     win.loadURL(url)
     // Open devTool if the app is not packaged
@@ -83,7 +84,7 @@ async function createBackground() {
   })
 
   // Dev Env
-  if (process.env.NODE_ENV === 'development') {
+  if (isDevEnv) {
     // electron-vite-vue#298
     backgroundWin.loadURL(bgUrl)
     // Open devTool if the app is not packaged
@@ -154,8 +155,9 @@ app.whenReady().then(async () => {
 
   win.on('close', (event) => {
     // when main win closed, others win will be closed
-    if (!backgroundWin && backgroundWin.isEnabled) {
-      backgroundWin.close()
+    if (backgroundWin && !backgroundWin.isDestroyed()) {
+      backgroundWin.destroy()
+      backgroundWin = null
     }
   })
 })
