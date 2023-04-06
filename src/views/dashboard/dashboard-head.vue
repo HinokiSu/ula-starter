@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref, watch } from 'vue'
+import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { TModConfigRes } from '@interfaces/ula-config'
 import UlaInput from '@components/input/input.vue'
 import UlaButton from '@components/button/button.vue'
@@ -113,15 +113,6 @@ export default defineComponent({
       }
     }
 
-    /*  watch(
-      () => runState.value,
-      async (newVal, oldVal) => {
-        if (newVal) {
-         
-        }
-      }
-    ) */
-
     const clickStarter = async () => {
       runState.value = !runState.value
       if (config.uipathLogDir.trim() === '') {
@@ -154,7 +145,6 @@ export default defineComponent({
             } else {
               // store in Pinia store
               logStore.setLogData(value.data)
-              // console.log('rec:', data)
             }
           })
         }
