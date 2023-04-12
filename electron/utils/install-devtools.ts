@@ -1,7 +1,7 @@
-import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 
 export async function installExt() {
-  await installExtension(VUEJS3_DEVTOOLS)
+  await installExtension(VUEJS_DEVTOOLS)
     .then(() => {
       console.log('[Electron DevTools] Added Extension')
     })
