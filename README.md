@@ -1,7 +1,6 @@
+## Uipath Log Analyzer Starter
 
- ## Uipath Log Analyzer Starter
-
-### Usage
+#### Usage
 
 ##### Pre-prepared
 
@@ -24,37 +23,42 @@ $ yarn
 $ yarn dev
 ```
 
-### Directory
+#### Directory
 
 ```
   ├── dist-electron # electron build
   ├── electron  # electron
   │
-  ├──
-  ├──┬ background  # handle ula logger renderer
+  ├── resources     # ula process file
+  │
+  ├──┬ background   # handle ula logger renderer
   │  ├── index.html # background page
   │  └── index.ts   # background renderer
   │
-  ├── src   # font-end
+  ├──┬ src   # font-end
+  │  └─┬ background  # handle ula logger renderer
+  │    └── index.ts   # background renderer
   │
-  ├──┬ ula   # uipath log analyzer project
+  ├──┬ resources   # uipath log analyzer project
   │  ├── uipath-log-analyzer_win.exe
-  │  ├── database
-  │  └── logger
+  │  └─┬ ula
+  │    ├── server.config.json
+  │    ├── database
+  │    └── logger
   │
   ├── index.html
+  ├── background.html   # background page
+  │
   ├── package.json
   └── vite.config.ts
 ```
 
-### Reference
+#### Reference
 
 - [Electron-vite-vue](https://github.com/electron-vite/electron-vite-vue)
-  
 - [NextUi](https://nextui.org/)
-  
 - [Hyper](https://github.com/vercel/hyper)
 
+#### License
 
-### License
 [MIT](https://github.com/HinokiSu/ula-starter/blob/main/LICENSE)
