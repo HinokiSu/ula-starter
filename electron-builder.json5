@@ -2,37 +2,35 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  "appId": "YourAppID",
-  "asar": true,
-  "icon": "public/favicon.ico",
-  "directories": {
-    "output": "release/${version}"
+  "appId": "com.ula-starter.app",
+  asar: true,
+  directories: {
+    output: 'release/${version}'
   },
-  "files": [
-    "dist-electron",
-    "dist"
+  files: ['dist-electron', 'dist'],
+  extraResources: [
+    {
+      from: './resources/uipath-log-analyzer_win.exe',
+      to: 'uipath-log-analyzer_win.exe'
+    },
+    {
+      from: './resources/ula/server.config.json',
+      to: 'ula/server.config.json'
+    }
   ],
-  "mac": {
-    "artifactName": "${productName}_${version}.${ext}",
-    "target": [
-      "dmg"
-    ]
-  },
-  "win": {
-    "target": [
+  win: {
+    target: [
       {
-        "target": "nsis",
-        "arch": [
-          "x64"
-        ]
+        target: 'nsis',
+        arch: ['x64']
       }
     ],
-    "artifactName": "${productName}_${version}.${ext}"
+    artifactName: '${productName}_${version}.${ext}'
   },
-  "nsis": {
-    "oneClick": false,
-    "perMachine": false,
-    "allowToChangeInstallationDirectory": true,
-    "deleteAppDataOnUninstall": false
+  nsis: {
+    oneClick: false,
+    perMachine: false,
+    allowToChangeInstallationDirectory: true,
+    deleteAppDataOnUninstall: false
   }
 }

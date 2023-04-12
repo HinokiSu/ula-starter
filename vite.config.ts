@@ -76,9 +76,9 @@ export default defineConfig(async ({ command }) => {
           }
         }
       ]),
-      // Use Node.js API in the Renderer-process
+      // Disable use Node.js API in the Renderer-process
       renderer({
-        nodeIntegration: true
+        nodeIntegration: false
       })
     ],
     resolve: {
@@ -94,7 +94,12 @@ export default defineConfig(async ({ command }) => {
       rollupOptions: {
         input: {
           main: resolve(__dirname, 'index.html'),
-          background: resolve(__dirname, 'background/index.html')
+          background: resolve(__dirname, './background.html')
+        },
+        output: {
+          chunkFileNames: 'static/js/[name]-[hash].js',
+          entryFileNames: 'static/js/[name]-[hash].js',
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
         }
       }
     },
