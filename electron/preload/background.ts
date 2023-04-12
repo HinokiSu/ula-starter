@@ -1,7 +1,4 @@
 const { ipcRenderer, contextBridge } = require('electron')
-const fsp = require('fs/promises')
-import fs from 'fs'
-import { join, sep } from 'path'
 
 contextBridge.exposeInMainWorld('backgroundAPI', {
   // send msg, start
@@ -13,18 +10,23 @@ contextBridge.exposeInMainWorld('backgroundAPI', {
   startPollingGetUlaLogInBG: (cb) => ipcRenderer.on('ula:start-polling-log', cb),
 
   stopPollingGetUlaLogInBG: (cb) => ipcRenderer.on('ula:stop-polling-log', cb),
-  responseGetUlaLogInBG: (data) => ipcRenderer.send('ula:response-polling-log', data)
+  responseGetUlaLogInBG: (data) => ipcRenderer.send('ula:response-polling-log', data),
+  getUlaLoggerPath: () => ipcRenderer.invoke('ula:get-ula-logger-path')
 })
 
+/* Because disable use nodeIntegration, preload not use node method */
 contextBridge.exposeInMainWorld('nodeAPI', {
   // provide Node api
-  fspStat: async (path: fs.PathLike) => await fsp.stat(path),
-  fspReadFile: async (path: fs.PathLike, encoding: BufferEncoding) =>
-    await fsp.readFile(path, {
-      encoding
-    }),
-  fsExistsSync: async (path: fs.PathLike) => fs.existsSync(path),
-  pathSep: () => sep,
-  pathJoin: (paths: string[]) => join(...paths),
-  processCwd: () => process.cwd()
+
+  fspStat: async (path: string) => await ipcRenderer.invoke('node-api:fsp-stat', path),
+
+  fspReadFile: async (path: string, encoding: BufferEncoding) =>
+    await ipcRenderer.invoke('node-api:fsp-read-file', path, encoding),
+
+  fsExistsSync: async (path: string) => await ipcRenderer.invoke('node-api:fs-exists-sync', path),
+
+  pathSep: async () => await ipcRenderer.invoke('node-api:path-sep'),
+  pathJoin: (paths: string[]) => ipcRenderer.invoke('node-api:path-join', paths),
+
+  processCwd: async () => await ipcRenderer.invoke('node-api:process-cwd')
 })
