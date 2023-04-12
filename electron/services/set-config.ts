@@ -14,8 +14,14 @@ type TModConfigRes = {
   config?: string
 }
 
-const getUlaConfigPath = () =>
-  path.join(process.cwd(), path.sep, 'ula', path.sep, 'server.config.json')
+const getUlaConfigPath = () => {
+  const suffixPath = ['ula', path.sep, 'server.config.json']
+  // production */resources/ula/ula/server
+  // ModPath: server.config.json
+  return process.env.NODE_ENV === 'development'
+    ? path.join(process.cwd(), path.sep, 'resources', path.sep, ...suffixPath)
+    : path.join(process.cwd(), path.sep, 'resources', path.sep, ...suffixPath)
+}
 
 const readUlaConfig = (configPath: string): TUlaConfig | string => {
   if (!fs.existsSync(configPath)) {
@@ -44,6 +50,7 @@ const setNewLogDirFromConfig = (logDir: string, config: TUlaConfig, configPath: 
 
 export const getOldLogDirFromConfig = (): TModConfigRes => {
   const configPath = getUlaConfigPath()
+  console.log('[ULA Config]: ', configPath)
   const config = readUlaConfig(configPath)
   // appear error
   if (typeof config === 'string')
@@ -66,7 +73,7 @@ export const getOldLogDirFromConfig = (): TModConfigRes => {
 export const modifyUlaConfig = (logPath: string): TModConfigRes => {
   // ula process config file path
   const ulaConfigPath = getUlaConfigPath()
-  console.log('Ula config path: ', ulaConfigPath)
+  console.log('[ULA] config path: ', ulaConfigPath)
 
   const config = readUlaConfig(ulaConfigPath)
   // appear error
