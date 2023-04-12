@@ -2,23 +2,29 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 import { bootstrap } from '../services'
-import { preHandle } from '../services/pre-handle'
+import { preHandle, preProvideNodeApi } from '../services/pre-handle'
 import { pickLogDir } from '../services/set-config'
 
 process.env.DIST_ELECTRON = join(__dirname, '..')
+/* D:\GitHub\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist-electron */
+console.log('[process:DIST_ELECTRON]: ', process.env.DIST_ELECTRON)
+
 process.env.DIST = join(process.env.DIST_ELECTRON, '../dist')
+/* D:\GitHub\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist */
+console.log('[process:DIST]: ', process.env.DIST)
+
 process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? join(process.env.DIST_ELECTRON, '../public')
   : process.env.DIST
+/* D:\GitHub\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist */
+console.log('[process:PUBLIC]: ', process.env.PUBLIC)
 
-const isDevEnv = process.env.NODE_ENV === 'development'
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 
 // Set application name for Windows 10+ notifications
 if (process.platform === 'win32') app.setAppUserModelId(app.getName())
 
-app.commandLine.appendSwitch('disable-http-cache')
 if (!app.requestSingleInstanceLock()) {
   app.quit()
   process.exit(0)
@@ -31,14 +37,22 @@ if (!app.requestSingleInstanceLock()) {
 
 // Main Render Process
 let win: BrowserWindow | null = null
+console.log('[Cwd]: ', process.cwd())
+
 // Here, you can also use other preload
 const url = process.env.VITE_DEV_SERVER_URL
+console.log('Main URL: ', url)
 const indexHtml = join(process.env.DIST, 'index.html')
+console.log('Main Index: ', indexHtml)
+const mainPreload = join(__dirname, '../preload/index.js')
 
 // Background Render Process
 let backgroundWin: BrowserWindow | null = null
-const bgUrl = process.env.VITE_DEV_SERVER_URL + 'background/'
-const bgIndexHtml = join(process.env.DIST, 'background/index.html')
+const bgUrl = process.env.VITE_DEV_SERVER_URL + 'background.html'
+console.log('Background URL: ', bgUrl)
+const bgIndexHtml = join(process.env.DIST, 'background.html')
+console.log('Background Index: ', bgIndexHtml)
+const bgPreload = join(__dirname, '../preload/background.js')
 
 async function createWindow() {
   win = new BrowserWindow({
@@ -49,20 +63,20 @@ async function createWindow() {
     // transparent: false,
     // icon: join(process.env.PUBLIC, 'favicon.ico'),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      contextIsolation: true
+      preload: mainPreload,
+      contextIsolation: true,
+      nodeIntegration: false
     }
   })
-  console.log(process.env.VITE_DEV_SERVER_URL)
+  console.log('[Env]: VITE_Server_URL: ', process.env.VITE_DEV_SERVER_URL)
 
   // Dev Env
-  if (isDevEnv) {
+  if (process.env.VITE_DEV_SERVER_URL) {
     // electron-vite-vue#298
     win.loadURL(url)
     // Open devTool if the app is not packaged
     win.webContents.openDevTools()
   } else {
-    // Prod Env
     win.loadFile(indexHtml)
   }
 
@@ -72,33 +86,33 @@ async function createWindow() {
 async function createBackground() {
   backgroundWin = new BrowserWindow({
     // hide window
-    show: false,
+    show: process.env.NODE_ENV !== 'development' ? false : true,
     width: 400,
     height: 300,
     title: 'UlaStarter-Background.app',
     webPreferences: {
+      preload: bgPreload,
       contextIsolation: true,
-      nodeIntegration: true,
-      preload: join(__dirname, '../preload/background.js')
+      // Disable node, for security
+      nodeIntegration: false
     }
   })
 
   // Dev Env
-  if (isDevEnv) {
+  if (process.env.VITE_DEV_SERVER_URL) {
     // electron-vite-vue#298
     backgroundWin.loadURL(bgUrl)
     // Open devTool if the app is not packaged
-    // backgroundWin.webContents.openDevTools()
+    backgroundWin.webContents.openDevTools()
   } else {
-    // Prod Env
     backgroundWin.loadFile(bgIndexHtml)
   }
 }
 
 app.whenReady().then(async () => {
-  console.log(`[Electron] current Env: ${process.env.NODE_ENV}`)
   // is dev
   if (process.env.NODE_ENV === 'development') {
+    console.log(`[Electron] current Env: ${process.env.NODE_ENV}`)
     try {
       const { installExt } = await import('../utils/install-devtools')
       await installExt()
@@ -123,26 +137,30 @@ app.whenReady().then(async () => {
     backgroundWin.webContents.on('did-finish-load', () => {
       backgroundWin.webContents.send('ula:start-polling-log', data)
     })
+  })
 
-    ipcMain.on('ula:open-ula-page', (event, data) => {
-      // ULA web URL
-      if (data) {
-        shell.openExternal('http://localhost:4301')
-      }
-    })
+  // open browser
+  ipcMain.on('ula:open-ula-page', (event, data) => {
+    // ULA web URL
+    if (data) {
+      shell.openExternal('http://localhost:4301')
+    }
   })
 
   // stop polling
   ipcMain.on('ula:stop-polling-log', (event, data) => {
     // close bg win
     backgroundWin.webContents.send('ula:stop-polling-log', data)
-    backgroundWin.close()
+    if (backgroundWin && !backgroundWin.isDestroyed()) {
+      backgroundWin.destroy()
+      backgroundWin = null
+    }
   })
 
   // pre handle
   preHandle(win)
   // createMenu(win)
-
+  preProvideNodeApi()
   // run ula
   bootstrap()
 
