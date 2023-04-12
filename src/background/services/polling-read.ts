@@ -1,8 +1,3 @@
-/* import fsp from 'fs/promises'
-import fs from 'fs' */
-// import path from 'path'
-// let sleep = require('util').promisify(setTimeout)
-// const fs = require('fs').promises
 import { sleep } from '../utils/sleep'
 import { nodeAPI } from '../api/electron-api'
 type TLogItem = {
@@ -12,14 +7,14 @@ type TLogItem = {
   service: string
 }
 
+/* false: error, true: valuable data */
 type TReply = {
-  /* false: error, true: valuable data */
   flag: boolean
-  msg: string
-  data: Array<TLogItem> | []
+  msg?: string
+  data?: Array<TLogItem> | []
 }
 
-const handleReply = ({ flag, msg = '', data = [] }): TReply => ({
+const handleReply = ({ flag, msg = '', data = [] }: TReply) => ({
   flag,
   msg,
   data
@@ -29,10 +24,10 @@ const handleReply = ({ flag, msg = '', data = [] }): TReply => ({
  * polling read logger file
  */
 export const pollingRead = async (cb: any, stop = false) => {
-  const sep = nodeAPI.pathSep()
-  const cwd = nodeAPI.processCwd()
+  const logPath = await window.backgroundAPI.getUlaLoggerPath()
 
-  const logPath = await nodeAPI.pathJoin([cwd, sep, 'ula', sep, 'logger', sep, 'ula_execution.log'])
+  console.log('[ULA Logger]: ', logPath)
+
   // check logger file exist
   let isExist = await nodeAPI.fsExistsSync(logPath)
   for (let i = 0; i < 3; i++) {
@@ -85,7 +80,7 @@ export const pollingRead = async (cb: any, stop = false) => {
           })
         )
       }
-      filteredData = null
+      filteredData = []
       oldModTime = latestModTime
     }
 

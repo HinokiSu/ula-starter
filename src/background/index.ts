@@ -1,9 +1,8 @@
 import { IpcMainEvent } from 'electron'
-
 import { backgroundAPI } from './api/electron-api'
 import { pollingRead } from './services/polling-read'
 
-backgroundAPI.startPollingGetUlaLogInBG((event: IpcMainEvent, data) => {
+backgroundAPI.startPollingGetUlaLogInBG((event: IpcMainEvent, data: any) => {
   console.log('[Polling]: BG-start: ', data)
 
   // return bg win -> Main Process
@@ -12,6 +11,6 @@ backgroundAPI.startPollingGetUlaLogInBG((event: IpcMainEvent, data) => {
   })
 })
 
-backgroundAPI.stopPollingGetUlaLogInBG((event, data) => {
+backgroundAPI.stopPollingGetUlaLogInBG((event: IpcMainEvent, data: any) => {
   console.log('[Polling]: BG-stop: ', data)
 })
