@@ -1,7 +1,7 @@
 import path from 'node:path'
-import { execFile } from 'node:child_process'
+import { spawn } from 'node:child_process'
 import fs from 'node:fs'
-import { ChildProcess } from 'child_process'
+import { checkRunning } from '../utils/check-running'
 /* 
   1. Renderer: when click [start] button, send msg to Main process, Main process begin running ula.exe
   2. when running ula.exe failed, Main process use event.reply(channel, msg) send to Render
@@ -9,51 +9,65 @@ import { ChildProcess } from 'child_process'
 
 interface runResult {
   status: 'running' | 'failed' | 'stopped'
-  msg: string
+  pid?: number
+  msg?: string
 }
 
-export default class UlaProcess {
-  child: ChildProcess
-  constructor() {}
+const handleRunResult = ({ status, pid = undefined, msg = '' }: runResult) => ({
+  status,
+  pid,
+  msg
+})
 
-  runUlaProcess(): runResult {
-    // ula process path
-    const runResult: runResult = {
-      status: 'stopped',
-      msg: ''
-    }
-    const processPath = path.join(
-      process.cwd(),
-      path.sep,
-      'ula',
-      path.sep,
-      'uipath-log-analyzer_win.exe'
-    )
-    console.log('[ULA process]: ', processPath)
-    const isProcessFileExist = fs.existsSync(processPath)
-    if (!isProcessFileExist) {
-      runResult.status = 'failed'
-      runResult.msg = `Error: [ULA process], ula process execution file is not found! Path: ${processPath}`
-      return runResult
-    }
-    try {
-      this.child = execFile(processPath)
-      runResult.status = 'running'
-      runResult.msg = ''
-    } catch (error) {
-      // need error info pass to renderer
-      console.log('[Electron] run ula.exe, Occurred error!!! ', error)
-      // send error msg to renderer
-      runResult.status = 'failed'
-      runResult.msg = '[Electron] run ula.exe, Occurred error!!!'
-    } finally {
-      return runResult
-    }
+const getUlaProcessPath = () => {
+  // ula process path
+  let processPath: string
+  // ModPath: uipath-log-analyzer_win.exe
+  const suffixPath = [path.sep, 'uipath-log-analyzer_win.exe']
+  if (process.env.NODE_ENV === 'development') {
+    processPath = path.join(process.cwd(), path.sep, 'resources', ...suffixPath)
+  } else {
+    // production */resources/ula/uipath-log-analyzer_win.exe
+    processPath = path.join(process.cwd(), path.sep, 'resources', ...suffixPath)
   }
 
-  stopRunUla() {
-    const res = process.kill(this.child.pid)
-    console.log(`[ULA]: whether killed ula process: ${res}`)
-    return res
+  return processPath
+}
+
+export const runUlaProcess = () => {
+  const processPath = getUlaProcessPath()
+  console.log('[ULA Process]: ', processPath)
+  const isProcessFileExist = fs.existsSync(processPath)
+  if (!isProcessFileExist) {
+    return handleRunResult({
+      status: 'failed',
+      msg: `Error: [ULA process], ula process execution file is not found! Path: ${processPath}`
+    })
   }
+  try {
+    // execute ULA process
+    const child = spawn(processPath, { windowsHide: true })
+    return handleRunResult({
+      status: 'running',
+      pid: child.pid
+    })
+  } catch (error) {
+    // need error info pass to renderer
+    console.log('[Electron] run ula.exe, Occurred error!!! ', error)
+    // send error msg to renderer
+    return handleRunResult({
+      status: 'failed',
+      msg: '[Electron] run ula.exe, Occurred error!!!'
+    })
+  }
+}
+
+export const stopRunUla = (pid: number) => {
+  if (!pid) {
+    return console.log('[ULA]: when stop ula, but pid is empty')
+  }
+  // spawn('taskkill', ['/pid', pid.toString(), '/f', '/t'])
+  const res = checkRunning(pid) ? process.kill(pid) : false
+  console.log(`[ULA]: whether killed ula process: ${res}`)
+  return res
 }
