@@ -1,6 +1,6 @@
 {
   "name": "ula-starter",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "main": "dist-electron/main/index.js",
   "description": "Uipath log analyzer starter.",
   "author": "Hinoki",
@@ -19,7 +19,8 @@
   "scripts": {
     "dev": "set NODE_ENV=development&&vite",
     "build": "set NODE_ENV=production&&vue-tsc --noEmit && vite build && electron-builder",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:font": "set NODE_ENV=production&&vue-tsc --noEmit && vite build"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

@@ -154,8 +154,8 @@ export default defineComponent({
     const clickStop = async () => {
       if (runState.value) {
         runState.value = false
-        const stopRes = await window.electronAPI.stopRunUla()
         await window.electronAPI.stopPollingUlaLog(runState.value)
+        const stopRes = await window.electronAPI.stopRunUla()
         if (stopRes) {
           console.log('[ULA]: Stop success')
         } else {
