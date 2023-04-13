@@ -1,6 +1,6 @@
 {
   "name": "ula-starter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist-electron/main/index.js",
   "description": "Uipath log analyzer starter.",
   "author": "Hinoki",

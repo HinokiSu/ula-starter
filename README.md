@@ -9,7 +9,7 @@ Need **Uipath log analyzer .exe** file
 > Github: [Uipath-log-analyzer](https://github.com/HinokiSu/uipath-log-analyzer)
 > File download page: [ula-releases](https://github.com/HinokiSu/uipath-log-analyzer/releases)
 
-copy it to the `ula` directory
+copy it to the `$rootPath/resources` directory
 
 ##### Install Deps
 

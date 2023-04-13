@@ -18,9 +18,7 @@ const getUlaConfigPath = () => {
   const suffixPath = ['ula', path.sep, 'server.config.json']
   // production */resources/ula/ula/server
   // ModPath: server.config.json
-  return process.env.NODE_ENV === 'development'
-    ? path.join(process.cwd(), path.sep, 'resources', path.sep, ...suffixPath)
-    : path.join(process.cwd(), path.sep, 'resources', path.sep, ...suffixPath)
+  return path.join(process.cwd(), path.sep, 'resources', path.sep, ...suffixPath)
 }
 
 const readUlaConfig = (configPath: string): TUlaConfig | string => {
