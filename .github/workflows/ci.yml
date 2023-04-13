@@ -1,0 +1,27 @@
+name: CI Action
+
+on: [push, pull_request]
+
+jobs:
+  app:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Print Pwd
+        run: echo $PWD
+
+      - name: See Yarn Version
+        run: yarn -v
+
+      - name: Install Deps
+        run: yarn
+
+      - name: 🔩Build font-end 
+        run: yarn build:font
