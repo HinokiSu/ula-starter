@@ -6,17 +6,17 @@ import { preHandle, preProvideNodeApi } from '../services/pre-handle'
 import { pickLogDir } from '../services/set-config'
 
 process.env.DIST_ELECTRON = join(__dirname, '..')
-/* D:\GitHub\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist-electron */
+/* win-unpacked: $rootPath\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist-electron */
 console.log('[process:DIST_ELECTRON]: ', process.env.DIST_ELECTRON)
 
 process.env.DIST = join(process.env.DIST_ELECTRON, '../dist')
-/* D:\GitHub\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist */
+/* win-unpacked: $rootPath\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist */
 console.log('[process:DIST]: ', process.env.DIST)
 
 process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? join(process.env.DIST_ELECTRON, '../public')
   : process.env.DIST
-/* D:\GitHub\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist */
+/* win-unpacked: $rootPath\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist */
 console.log('[process:PUBLIC]: ', process.env.PUBLIC)
 
 // Disable GPU Acceleration for Windows 7
@@ -29,11 +29,6 @@ if (!app.requestSingleInstanceLock()) {
   app.quit()
   process.exit(0)
 }
-
-// Remove electron security warnings
-// This warning only shows in development mode
-// Read more on https://www.electronjs.org/docs/latest/tutorial/security
-// process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 // Main Render Process
 let win: BrowserWindow | null = null

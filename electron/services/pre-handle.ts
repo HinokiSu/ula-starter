@@ -13,12 +13,8 @@ export const preHandle = (win: BrowserWindow) => {
   ipcMain.handle('ula:get-ula-logger-path', (event) => {
     // ModPath: ula_execution.log
     const suffixPath = ['ula', sep, 'logger', sep, 'ula_execution.log']
-    if (process.env.NODE_ENV === 'development') {
-      return join(process.cwd(), sep, 'resources', sep, ...suffixPath)
-    } else {
-      // production */resources/ula/logger/ula-execution.log
-      return join(process.cwd(), sep, 'resources', sep, ...suffixPath)
-    }
+    // production */resources/ula/logger/ula-execution.log
+    return join(process.cwd(), sep, 'resources', sep, ...suffixPath)
   })
 }
 

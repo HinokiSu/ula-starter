@@ -20,17 +20,15 @@ const handleRunResult = ({ status, pid = undefined, msg = '' }: runResult) => ({
 })
 
 const getUlaProcessPath = () => {
-  // ula process path
-  let processPath: string
   // ModPath: uipath-log-analyzer_win.exe
-  const suffixPath = [path.sep, 'uipath-log-analyzer_win.exe']
-  if (process.env.NODE_ENV === 'development') {
-    processPath = path.join(process.cwd(), path.sep, 'resources', ...suffixPath)
-  } else {
-    // production */resources/ula/uipath-log-analyzer_win.exe
-    processPath = path.join(process.cwd(), path.sep, 'resources', ...suffixPath)
-  }
-
+  // development/production */resources/ula/uipath-log-analyzer_win.exe
+  const processPath = path.join(
+    process.cwd(),
+    path.sep,
+    'resources',
+    path.sep,
+    'uipath-log-analyzer_win.exe'
+  )
   return processPath
 }
 
