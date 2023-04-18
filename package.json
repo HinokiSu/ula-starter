@@ -1,15 +1,20 @@
 {
   "name": "ula-starter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist-electron/main/index.js",
   "description": "Uipath log analyzer starter.",
   "author": "Hinoki",
   "license": "MIT",
   "private": true,
+  "repository": {
+    "url": "https://github.com/HinokiSu/ula-starter"
+  },
   "keywords": [
     "electron",
     "vite",
-    "vue3"
+    "vue3",
+    "Uipath",
+    "parse-log"
   ],
   "debug": {
     "env": {
