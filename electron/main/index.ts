@@ -1,9 +1,10 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, shell } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 import { bootstrap } from '../services'
 import { preHandle, preProvideNodeApi } from '../services/pre-handle'
 import { pickLogDir } from '../services/set-config'
+import { createMenu } from '../menus/menu'
 
 process.env.DIST_ELECTRON = join(__dirname, '..')
 /* win-unpacked: $rootPath\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist-electron */
@@ -22,7 +23,6 @@ console.log('[process:PUBLIC]: ', process.env.PUBLIC)
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 
-// Set application name for Windows 10+ notifications
 if (process.platform === 'win32') app.setAppUserModelId(app.getName())
 
 if (!app.requestSingleInstanceLock()) {
@@ -52,9 +52,15 @@ const bgPreload = join(__dirname, '../preload/background.js')
 async function createWindow() {
   win = new BrowserWindow({
     title: 'UlaStarter.app',
-    width: 800,
+    width: 750,
     height: 650,
-    // frame: false, // frameLess
+    minWidth: 610,
+    minHeight: 650,
+    // transparent: true,
+    titleBarStyle: 'hidden',
+    // disable full win
+    fullscreenable: false,
+    frame: false, // frameLess
     // transparent: false,
     // icon: join(process.env.PUBLIC, 'favicon.ico'),
     webPreferences: {
@@ -104,6 +110,31 @@ async function createBackground() {
   }
 }
 
+const winControlIpc = () => {
+  ipcMain.on('win:close-win', () => {
+    app.exit()
+  })
+
+  ipcMain.on('win:maximize', () => {
+    win.maximize()
+  })
+
+  ipcMain.on('win:minimize', () => {
+    win.minimize()
+  })
+
+  ipcMain.on('win:un-maximize', () => {
+    win.unmaximize()
+  })
+
+  win.on('maximize', () => {
+    win.webContents.send('win:is-maximize', true)
+  })
+  win.on('unmaximize', () => {
+    win.webContents.send('win:is-maximize', false)
+  })
+}
+
 app.whenReady().then(async () => {
   // is dev
   if (process.env.NODE_ENV === 'development') {
@@ -119,6 +150,17 @@ app.whenReady().then(async () => {
 
   // create main window
   createWindow()
+  winControlIpc()
+
+  ipcMain.on('menu:open-hamburger-menu', (event, args) => {
+    if (win) {
+      createMenu().popup({
+        window: win,
+        x: args.x,
+        y: args.y
+      })
+    }
+  })
   pickLogDir(win)
 
   ipcMain.on('ula:response-polling-log', (event, data) => {

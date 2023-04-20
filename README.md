@@ -62,3 +62,7 @@ $ yarn dev
 #### License
 
 [MIT](https://github.com/HinokiSu/ula-starter/blob/main/LICENSE)
+
+
+#### TODO
+- [ ] internationalization

@@ -1,7 +1,17 @@
 import TOldConfig from '../interfaces/ula-config'
 
 export interface IElectronAPI {
-  // M -> R
+  // window control
+  minimizeWin: () => Promise<void>
+  maximizeWin: () => Promise<void>
+  unMaximizeWin: () => Promise<void>
+  closeWin: () => Promise<void>
+  isMaxWin: (cb) => Promise<any>
+
+  // menu
+  openMenu: (x, y) => Promise<void>
+
+  // ula config
   pickUipathLogDirs: () => Promise<any>
   getOldUipathLogDirs: () => Promise<TOldConfig>
 

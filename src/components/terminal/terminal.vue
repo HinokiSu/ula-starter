@@ -36,7 +36,7 @@ export default defineComponent({
   padding-top: 1.5rem;
   padding-bottom: 1rem;
   height: 300px;
-  min-height: calc(67vh);
+  min-height: calc(65vh);
 }
 .terminal {
   &-container {
