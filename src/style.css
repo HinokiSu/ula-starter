@@ -1,6 +1,9 @@
 :root {
   font-size: 16px;
 
+
+  --ula-icon-bg: #777;
+  --ula-icon-bg-hover: #111;
   /* Reference to: NextUI */
   --ula-colors-primary: #0072f5;
   --ula-colors-text: #11181c;
@@ -25,10 +28,14 @@ body {
   /* min-height: 100vh; */
   margin: 0;
 }
+button {
+  -webkit-app-region: no-drag;
+}
 
 #app {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 /*  */
