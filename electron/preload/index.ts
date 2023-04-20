@@ -2,6 +2,13 @@ import { ipcRenderer } from 'electron'
 const { contextBridge } = require('electron')
 
 contextBridge.exposeInMainWorld('electronAPI', {
+  // window control
+  minimizeWin: () => ipcRenderer.send('win:minimize'),
+  maximizeWin: () => ipcRenderer.send('win:maximize'),
+  unMaximizeWin: () => ipcRenderer.send('win:un-maximize'),
+  closeWin: () => ipcRenderer.send('win:close-win'),
+  isMaxWin: (cb) => ipcRenderer.on('win:is-maximize', cb),
+
   // run ula
   startRunUla: () => ipcRenderer.invoke('ula:start-run'),
   stopRunUla: () => ipcRenderer.invoke('ula:stop-run'),
@@ -18,7 +25,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // when first start or reload, get ula config
   getOldUipathLogDirs: () => ipcRenderer.invoke('get-old-uipath-log-dir'),
 
-  // get  parsed ula log 
+  // get  parsed ula log
   receiveParsedUlaLog: (cb) => {
     ipcRenderer.on('ula:response-polling-log', cb)
   },

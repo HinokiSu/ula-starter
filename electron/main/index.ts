@@ -52,9 +52,13 @@ const bgPreload = join(__dirname, '../preload/background.js')
 async function createWindow() {
   win = new BrowserWindow({
     title: 'UlaStarter.app',
-    width: 800,
+    width: 750,
     height: 650,
-    // frame: false, // frameLess
+    minWidth: 610,
+    minHeight: 650,
+    // transparent: true,
+    titleBarStyle: 'hidden',
+    frame: false, // frameLess
     // transparent: false,
     // icon: join(process.env.PUBLIC, 'favicon.ico'),
     webPreferences: {
@@ -104,6 +108,31 @@ async function createBackground() {
   }
 }
 
+const winControlIpc = () => {
+  ipcMain.on('win:close-win', () => {
+    app.exit()
+  })
+
+  ipcMain.on('win:maximize', () => {
+    win.maximize()
+  })
+
+  ipcMain.on('win:minimize', () => {
+    win.minimize()
+  })
+
+  ipcMain.on('win:un-maximize', () => {
+    win.unmaximize()
+  })
+
+  win.on('maximize', () => {
+    win.webContents.send('win:is-maximize', true)
+  })
+  win.on('unmaximize', () => {
+    win.webContents.send('win:is-maximize', false)
+  })
+}
+
 app.whenReady().then(async () => {
   // is dev
   if (process.env.NODE_ENV === 'development') {
@@ -119,6 +148,7 @@ app.whenReady().then(async () => {
 
   // create main window
   createWindow()
+  winControlIpc()
   pickLogDir(win)
 
   ipcMain.on('ula:response-polling-log', (event, data) => {
