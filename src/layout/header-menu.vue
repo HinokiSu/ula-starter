@@ -1,6 +1,6 @@
 <template>
   <div class="header-menu">
-    <burger-menu-icon></burger-menu-icon>
+    <burger-menu-icon @click="openMenu"></burger-menu-icon>
     <div class="app-title">
       <span>Ula Starter</span>
     </div>
@@ -51,7 +51,12 @@ export default defineComponent({
     const unMaxWinControl = async () => {
       await window.electronAPI.unMaximizeWin()
     }
-    return { isMaximize, minWinControl, maxWinControl, closeWinControl, unMaxWinControl }
+
+    /* Menu */
+    const openMenu = async (e: PointerEvent) => {
+      await window.electronAPI.openMenu(e.x, e.y)
+    }
+    return { isMaximize, minWinControl, maxWinControl, closeWinControl, unMaxWinControl, openMenu }
   }
 })
 </script>

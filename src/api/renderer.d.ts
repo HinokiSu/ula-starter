@@ -8,6 +8,9 @@ export interface IElectronAPI {
   closeWin: () => Promise<void>
   isMaxWin: (cb) => Promise<any>
 
+  // menu
+  openMenu: (x, y) => Promise<void>
+
   // ula config
   pickUipathLogDirs: () => Promise<any>
   getOldUipathLogDirs: () => Promise<TOldConfig>
