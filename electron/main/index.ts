@@ -1,9 +1,10 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, shell } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
 import { bootstrap } from '../services'
 import { preHandle, preProvideNodeApi } from '../services/pre-handle'
 import { pickLogDir } from '../services/set-config'
+import { createMenu } from '../menus/menu'
 
 process.env.DIST_ELECTRON = join(__dirname, '..')
 /* win-unpacked: $rootPath\ula-starter\release\1.0.0\win-unpacked\resources\app.asar\dist-electron */
@@ -22,7 +23,6 @@ console.log('[process:PUBLIC]: ', process.env.PUBLIC)
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 
-// Set application name for Windows 10+ notifications
 if (process.platform === 'win32') app.setAppUserModelId(app.getName())
 
 if (!app.requestSingleInstanceLock()) {
@@ -58,6 +58,8 @@ async function createWindow() {
     minHeight: 650,
     // transparent: true,
     titleBarStyle: 'hidden',
+    // disable full win
+    fullscreenable: false,
     frame: false, // frameLess
     // transparent: false,
     // icon: join(process.env.PUBLIC, 'favicon.ico'),
@@ -149,6 +151,16 @@ app.whenReady().then(async () => {
   // create main window
   createWindow()
   winControlIpc()
+
+  ipcMain.on('menu:open-hamburger-menu', (event, args) => {
+    if (win) {
+      createMenu().popup({
+        window: win,
+        x: args.x,
+        y: args.y
+      })
+    }
+  })
   pickLogDir(win)
 
   ipcMain.on('ula:response-polling-log', (event, data) => {

@@ -9,6 +9,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   closeWin: () => ipcRenderer.send('win:close-win'),
   isMaxWin: (cb) => ipcRenderer.on('win:is-maximize', cb),
 
+  // menu
+  openMenu: (x, y) => ipcRenderer.send('menu:open-hamburger-menu', { x, y }),
+
   // run ula
   startRunUla: () => ipcRenderer.invoke('ula:start-run'),
   stopRunUla: () => ipcRenderer.invoke('ula:stop-run'),

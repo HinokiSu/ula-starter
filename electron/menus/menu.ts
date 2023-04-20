@@ -1,41 +1,39 @@
-import { BrowserWindow, MenuItemConstructorOptions } from 'electron'
+import { MenuItemConstructorOptions, app, dialog } from 'electron'
+import { iconPath } from '../utils/paths'
 
-const { app, Menu } = require('electron')
+const { Menu, shell } = require('electron')
 
-// { role: 'appMenu' }
-const appMenu = (): MenuItemConstructorOptions => {
-  return {
-    label: app.name,
-    submenu: [
-      { role: 'about', type: 'separator' },
-      { role: 'services', type: 'separator' },
-      { role: 'hide' },
-      { role: 'hideOthers' },
-      { role: 'unhide', type: 'separator' },
-      { role: 'quit' }
-    ]
-  }
+const appName = 'Ula Starter'
+const appVersion = app.getVersion()
+
+const showAbout = () => {
+  void dialog.showMessageBox({
+    title: `About ${appName}`,
+    message: `${appName} ${appVersion} `,
+    detail: `\nCreated by HinokiSu\n\nGithub: https://github.com/HinokiSu`,
+    // icon: iconPath as any,
+  })
 }
 
-// { role: 'fileMenu' }
-const fileMenu = (): MenuItemConstructorOptions => ({
-  label: 'File',
-  submenu: [{ role: 'quit' }]
-})
-
-// { role: 'editMenu' }
-const editMenu = (): MenuItemConstructorOptions => ({
-  label: 'Edit',
+const appMenu = (): MenuItemConstructorOptions => ({
+  label: 'App',
   submenu: [
-    { role: 'undo' },
-    { role: 'redo' },
+    {
+      label: 'Language',
+      submenu: [
+        {
+          label: 'English'
+        },
+        {
+          label: '中文'
+        }
+      ]
+    },
     { type: 'separator' },
-    { role: 'cut' },
-    { role: 'copy' },
-    { role: 'paste' },
-    { role: 'delete' },
-    { type: 'separator' },
-    { role: 'selectAll' }
+    {
+      label: 'Quit',
+      role: 'quit'
+    }
   ]
 })
 
@@ -49,9 +47,7 @@ const viewMenu = (): MenuItemConstructorOptions => ({
     { type: 'separator' },
     { role: 'resetZoom' },
     { role: 'zoomIn' },
-    { role: 'zoomOut' },
-    { type: 'separator' },
-    { role: 'togglefullscreen' }
+    { role: 'zoomOut' }
   ]
 })
 
@@ -67,18 +63,26 @@ const helpMenu = (): MenuItemConstructorOptions => ({
     {
       label: 'Learn More',
       click: async () => {
-        const { shell } = require('electron')
-        await shell.openExternal('https://electronjs.org')
+        await shell.openExternal('https://github.com/HinokiSu/ula-starter')
       }
-    }
+    },
+    {
+      label: 'Report Issue',
+      click: async () => {
+        await shell.openExternal('https://github.com/HinokiSu/ula-starter/issues')
+      }
+    },
+    { type: 'separator' },
+    { label: 'About', click: () => showAbout() }
   ]
 })
 
-const template = [viewMenu(), windowMenu()]
+const template = [appMenu(), viewMenu(), windowMenu(), helpMenu()]
 // fileMenu(), editMenu(), , windowMenu(), helpMenu()
 
-export const createMenu = (win: BrowserWindow) => {
+export const createMenu = () => {
   const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
   //   Menu.setApplicationMenu(menu)
-  win.setMenu(menu)
+  return menu
 }
