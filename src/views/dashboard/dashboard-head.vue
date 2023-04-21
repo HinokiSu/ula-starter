@@ -7,21 +7,19 @@
           :disabled="runState"
           class="open-dialog-btn"
           @click="OpenSetLogDir"
-          title="Open Log Directory"
+          :title="$t('button.openLogRootPath')"
         />
         <ula-card
           radius="10px"
           min-wd="200px"
           max-wd="400px"
-          title="Uipath Log Path"
+          :title="$t('title.uipathLogPath')"
           class="log-dir"
         >
           <span>
             {{ config.uipathLogDir }}
           </span>
         </ula-card>
-
-        <!-- <ula-input v-model:value="config.uipath" :placeholder="'Uipath 日志路径'"></ula-input> -->
       </div>
     </div>
 
@@ -31,7 +29,7 @@
         v-if="!runState"
         class="head-starter"
         @click="clickStarter"
-        title="Start"
+        :title="$t('button.start')"
       >
         <template #preIcon>
           <play-icon />
@@ -43,7 +41,7 @@
         active
         class="head-starter"
         @click="clickStop"
-        title="Stop"
+        :title="$t('button.stop')"
       >
         <template #preIcon>
           <dot-loading color="#fff"></dot-loading>
@@ -52,7 +50,7 @@
       <ula-button
         color="gradient"
         :class="['open-ula-url', runState ? 'show' : '']"
-        title="Open ULA"
+        :title="$t('button.openUla')"
         @click="goToUlaPage"
       >
         <template #preIcon>
