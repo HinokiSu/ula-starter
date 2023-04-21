@@ -10,6 +10,7 @@ export interface IElectronAPI {
 
   // menu
   openMenu: (x, y) => Promise<void>
+  changeLang: (cb) => Promise<any>
 
   // ula config
   pickUipathLogDirs: () => Promise<any>

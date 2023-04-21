@@ -1,4 +1,4 @@
-import { MenuItemConstructorOptions, app, dialog } from 'electron'
+import { BrowserWindow, MenuItemConstructorOptions, app, dialog } from 'electron'
 import { iconPath } from '../utils/paths'
 
 const { Menu, shell } = require('electron')
@@ -10,22 +10,28 @@ const showAbout = () => {
   void dialog.showMessageBox({
     title: `About ${appName}`,
     message: `${appName} ${appVersion} `,
-    detail: `\nCreated by HinokiSu\n\nGithub: https://github.com/HinokiSu`,
+    detail: `\nCreated by HinokiSu\n\nGithub: https://github.com/HinokiSu`
     // icon: iconPath as any,
   })
 }
 
-const appMenu = (): MenuItemConstructorOptions => ({
+const appMenu = (win: BrowserWindow): MenuItemConstructorOptions => ({
   label: 'App',
   submenu: [
     {
       label: 'Language',
       submenu: [
         {
-          label: 'English'
+          label: 'English',
+          click: () => {
+            win.webContents.send('menu:change-lang', 'en')
+          }
         },
         {
-          label: '中文'
+          label: '中文',
+          click: () => {
+            win.webContents.send('menu:change-lang', 'zh')
+          }
         }
       ]
     },
@@ -77,10 +83,8 @@ const helpMenu = (): MenuItemConstructorOptions => ({
   ]
 })
 
-const template = [appMenu(), viewMenu(), windowMenu(), helpMenu()]
-// fileMenu(), editMenu(), , windowMenu(), helpMenu()
-
-export const createMenu = () => {
+export const createMenu = (win: BrowserWindow) => {
+  const template = [appMenu(win), viewMenu(), windowMenu(), helpMenu()]
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
   //   Menu.setApplicationMenu(menu)

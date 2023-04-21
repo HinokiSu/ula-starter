@@ -154,13 +154,14 @@ app.whenReady().then(async () => {
 
   ipcMain.on('menu:open-hamburger-menu', (event, args) => {
     if (win) {
-      createMenu().popup({
+      createMenu(win).popup({
         window: win,
         x: args.x,
         y: args.y
       })
     }
   })
+
   pickLogDir(win)
 
   ipcMain.on('ula:response-polling-log', (event, data) => {
@@ -201,13 +202,6 @@ app.whenReady().then(async () => {
   // run ula
   bootstrap()
 
-  // window
-  /* win.on('move', () => {
-    const position = win.getPosition()
-    win.webContents.send('move', { bounds: { x: position[0], y: position[1] } })
-    // rpc.emit('move', { bounds: { x: position[0], y: position[1] } })
-  }) */
-
   win.on('close', (event) => {
     // when main win closed, others win will be closed
     if (backgroundWin && !backgroundWin.isDestroyed()) {
@@ -239,20 +233,3 @@ app.on('activate', () => {
     createWindow()
   }
 })
-
-// New window example arg: new windows url
-/* ipcMain.handle('open-win', (_, arg) => {
-  const childWindow = new BrowserWindow({
-    webPreferences: {
-      preload,
-      nodeIntegration: true,
-      contextIsolation: false
-    }
-  })
-
-  if (process.env.VITE_DEV_SERVER_URL) {
-    childWindow.loadURL(`${url}#${arg}`)
-  } else {
-    childWindow.loadFile(indexHtml, { hash: arg })
-  }
-}) */
